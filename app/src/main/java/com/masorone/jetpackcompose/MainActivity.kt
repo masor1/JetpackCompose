@@ -8,7 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
-import com.masorone.jetpackcompose.lesson.l_2_6.InstagramProfileCard
+import com.masorone.jetpackcompose.lesson.l_2_7.InstagramProfileCard
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
 
 class MainActivity : ComponentActivity() {
