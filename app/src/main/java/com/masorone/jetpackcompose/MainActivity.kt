@@ -8,8 +8,8 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.Modifier
-import com.masorone.jetpackcompose.lesson.l_2_9.InstagramProfileCard
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
+import com.masorone.jetpackcompose.vknewsclient.ui.PostCard
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
                         .fillMaxSize()
                         .background(MaterialTheme.colorScheme.background)
                 ) {
-                    InstagramProfileCard()
+                    PostCard()
                 }
             }
         }
