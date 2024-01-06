@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun VkNewsMainScreen() {
-    val hostState = SnackbarHostState()
+    val hostState = remember { SnackbarHostState() }
     val fabState = remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
     Scaffold(
