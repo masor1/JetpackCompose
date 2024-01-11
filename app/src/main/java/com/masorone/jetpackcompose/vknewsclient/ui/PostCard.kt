@@ -6,13 +6,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MoreVert
@@ -22,27 +19,38 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.masorone.jetpackcompose.R
 import com.masorone.jetpackcompose.ui.CustomPreview
+import com.masorone.jetpackcompose.ui.SpacerHeight
+import com.masorone.jetpackcompose.ui.SpacerWidth
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
+import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
+import com.masorone.jetpackcompose.vknewsclient.domain.StatisticItem
+import com.masorone.jetpackcompose.vknewsclient.domain.StatisticType
 
 @Composable
-fun PostCard() {
+fun PostCard(
+    feedPostState: State<FeedPost>,
+    onViewsItemClick: (Int) -> Unit,
+    onSharesItemClick: (Int) -> Unit,
+    onCommentsItemClick: (Int) -> Unit,
+    onLikesItemClick: (Int) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Card(
-        modifier = Modifier
-            .wrapContentHeight()
-            .padding(8.dp),
+        modifier = modifier,
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.background
+            containerColor = MaterialTheme.colorScheme.primary
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = 2.dp
@@ -52,25 +60,29 @@ fun PostCard() {
             modifier = Modifier
                 .padding(8.dp)
         ) {
-            PostHeader()
-            Spacer(modifier = Modifier.height(8.dp))
-            PostContent()
-            Spacer(modifier = Modifier.height(8.dp))
-            PostStatistics()
+            PostHeader(feedPostState = feedPostState)
+            SpacerHeight(8.dp)
+            PostContent(feedPostState = feedPostState)
+            SpacerHeight(8.dp)
+            PostStatistics(
+                feedPostState = feedPostState,
+                onViewsItemClick = onViewsItemClick,
+                onSharesItemClick = onSharesItemClick,
+                onCommentsItemClick = onCommentsItemClick,
+                onLikesItemClick = onLikesItemClick
+            )
         }
     }
 }
 
 @Composable
-private fun PostHeader() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+private fun PostHeader(feedPostState: State<FeedPost>) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Image(
             modifier = Modifier
                 .size(56.dp)
                 .clip(CircleShape),
-            painter = ColorPainter(Color.Cyan),
+            painter = painterResource(id = feedPostState.value.avatarResId),
             contentDescription = null
         )
         Column(
@@ -79,13 +91,13 @@ private fun PostHeader() {
                 .weight(1f),
         ) {
             Text(
-                text = "Group name",
+                text = feedPostState.value.communityName,
                 color = MaterialTheme.colorScheme.onBackground,
                 fontWeight = FontWeight.Medium
             )
-            Spacer(modifier = Modifier.height(4.dp))
+            SpacerHeight(4.dp)
             Text(
-                text = "12:00",
+                text = feedPostState.value.publicationDate,
                 color = MaterialTheme.colorScheme.onSecondary
             )
         }
@@ -101,11 +113,11 @@ private fun PostHeader() {
 }
 
 @Composable
-private fun PostContent() {
-    Text(text = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Fusce dignissim nec nibh.")
-    Spacer(modifier = Modifier.height(8.dp))
+private fun PostContent(feedPostState: State<FeedPost>) {
+    Text(text = feedPostState.value.contentText)
+    SpacerHeight(8.dp)
     Image(
-        painter = painterResource(id = R.drawable.ic_launcher_background),
+        painter = painterResource(feedPostState.value.contentImageResId),
         contentDescription = null,
         contentScale = ContentScale.FillWidth,
         modifier = Modifier
@@ -116,20 +128,48 @@ private fun PostContent() {
 }
 
 @Composable
-private fun PostStatistics() {
-    Row(
-        verticalAlignment = Alignment.CenterVertically
-    ) {
+private fun PostStatistics(
+    feedPostState: State<FeedPost>,
+    onViewsItemClick: (Int) -> Unit,
+    onSharesItemClick: (Int) -> Unit,
+    onCommentsItemClick: (Int) -> Unit,
+    onLikesItemClick: (Int) -> Unit
+) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
         Row(modifier = Modifier.weight(1f)) {
-            StatisticItem("206", R.drawable.ic_views) {}
+            val viewsItem = feedPostState.value.statistics.itemBy(StatisticType.VIEWS)
+            StatisticItem(
+                count = viewsItem.count.toString(),
+                iconResId = R.drawable.ic_views
+            ) {
+                onViewsItemClick(viewsItem.count)
+            }
         }
         Row(
             modifier = Modifier.weight(1f),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            StatisticItem("206", R.drawable.ic_share) {}
-            StatisticItem("11", R.drawable.ic_comment) {}
-            StatisticItem("496", R.drawable.ic_like) {}
+            val sharesItem = feedPostState.value.statistics.itemBy(StatisticType.SHARES)
+            val commentItem = feedPostState.value.statistics.itemBy(StatisticType.COMMENT)
+            val likesItem = feedPostState.value.statistics.itemBy(StatisticType.LIKES)
+            StatisticItem(
+                count = sharesItem.count.toString(),
+                iconResId = R.drawable.ic_share
+            ) {
+                onSharesItemClick(sharesItem.count)
+            }
+            StatisticItem(
+                count = commentItem.count.toString(),
+                iconResId = R.drawable.ic_comment
+            ) {
+                onCommentsItemClick(commentItem.count)
+            }
+            StatisticItem(
+                count = likesItem.count.toString(),
+                iconResId = R.drawable.ic_like
+            ) {
+                onLikesItemClick(likesItem.count)
+            }
         }
     }
 }
@@ -154,7 +194,7 @@ private fun StatisticItem(
                 text = count,
                 color = MaterialTheme.colorScheme.onSecondary
             )
-            Spacer(modifier = Modifier.width(4.dp))
+            SpacerWidth(4.dp)
             Icon(
                 painter = painterResource(id = iconResId),
                 contentDescription = null,
@@ -164,18 +204,28 @@ private fun StatisticItem(
     }
 }
 
+private fun List<StatisticItem>.itemBy(type: StatisticType): StatisticItem = find {
+    it.type == type
+} ?: throw IllegalArgumentException("Type $type don't found in list of StatisticItem: $this")
+
 @Composable
 @CustomPreview
 private fun PostCardLight() {
+    val feedPostState = remember {
+        mutableStateOf(FeedPost())
+    }
     JetpackComposeTheme(darkTheme = false) {
-        PostCard()
+        PostCard(feedPostState, {}, {}, {}, {})
     }
 }
 
 @Composable
 @CustomPreview
 private fun PostCardDark() {
+    val feedPostState = remember {
+        mutableStateOf(FeedPost())
+    }
     JetpackComposeTheme(darkTheme = true) {
-        PostCard()
+        PostCard(feedPostState, {}, {}, {}, {})
     }
 }
