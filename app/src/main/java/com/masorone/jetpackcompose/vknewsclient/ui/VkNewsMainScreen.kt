@@ -5,24 +5,16 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.masorone.jetpackcompose.ui.CustomPreview
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
-import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
-import com.masorone.jetpackcompose.vknewsclient.domain.StatisticType
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun VkNewsMainScreen() {
-    val feedPostState = rememberSaveable {
-        mutableStateOf(FeedPost())
-    }
+fun VkNewsMainScreen(viewModel: VkNewsViewModel) {
     Scaffold(
         bottomBar = {
             NavigationBar {
@@ -41,19 +33,11 @@ fun VkNewsMainScreen() {
         }
     ) {
         PostCard(
-            feedPostState = feedPostState,
-            onViewsItemClick = {
-                feedPostState.incrementStatisticValueBy(StatisticType.VIEWS)
-            },
-            onSharesItemClick = {
-                feedPostState.incrementStatisticValueBy(StatisticType.SHARES)
-            },
-            onCommentsItemClick = {
-                feedPostState.incrementStatisticValueBy(StatisticType.COMMENT)
-            },
-            onLikesItemClick = {
-                feedPostState.incrementStatisticValueBy(StatisticType.LIKES)
-            },
+            feedPostStateLiveData = viewModel.feedPostState(),
+            onViewsItemClick = viewModel::incrementStatisticValueBy,
+            onSharesItemClick = viewModel::incrementStatisticValueBy,
+            onCommentsItemClick = viewModel::incrementStatisticValueBy,
+            onLikesItemClick = viewModel::incrementStatisticValueBy,
             modifier = Modifier
                 .padding(it)
                 .padding(8.dp)
@@ -61,21 +45,11 @@ fun VkNewsMainScreen() {
     }
 }
 
-private fun MutableState<FeedPost>.incrementStatisticValueBy(type: StatisticType) {
-    value = value.copy(statistics = value.statistics.map {
-        if (it.type == type) {
-            it.copy(count = it.count + 1)
-        } else {
-            it
-        }
-    })
-}
-
 @Composable
 @CustomPreview
 fun VkNewsMainScreenLight() {
     JetpackComposeTheme(darkTheme = false) {
-        VkNewsMainScreen()
+        VkNewsMainScreen(VkNewsViewModel())
     }
 }
 
@@ -83,6 +57,6 @@ fun VkNewsMainScreenLight() {
 @CustomPreview
 fun VkNewsMainScreenDark() {
     JetpackComposeTheme(darkTheme = true) {
-        VkNewsMainScreen()
+        VkNewsMainScreen(VkNewsViewModel())
     }
 }

@@ -20,8 +20,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -29,6 +28,8 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import com.masorone.jetpackcompose.R
 import com.masorone.jetpackcompose.ui.CustomPreview
 import com.masorone.jetpackcompose.ui.SpacerHeight
@@ -40,13 +41,14 @@ import com.masorone.jetpackcompose.vknewsclient.domain.StatisticType
 
 @Composable
 fun PostCard(
-    feedPostState: State<FeedPost>,
-    onViewsItemClick: (Int) -> Unit,
-    onSharesItemClick: (Int) -> Unit,
-    onCommentsItemClick: (Int) -> Unit,
-    onLikesItemClick: (Int) -> Unit,
+    feedPostStateLiveData: LiveData<FeedPost>,
+    onViewsItemClick: (StatisticType) -> Unit,
+    onSharesItemClick: (StatisticType) -> Unit,
+    onCommentsItemClick: (StatisticType) -> Unit,
+    onLikesItemClick: (StatisticType) -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val feedPostState = feedPostStateLiveData.observeAsState(FeedPost())
     Card(
         modifier = modifier,
         colors = CardDefaults.cardColors(
@@ -130,10 +132,10 @@ private fun PostContent(feedPostState: State<FeedPost>) {
 @Composable
 private fun PostStatistics(
     feedPostState: State<FeedPost>,
-    onViewsItemClick: (Int) -> Unit,
-    onSharesItemClick: (Int) -> Unit,
-    onCommentsItemClick: (Int) -> Unit,
-    onLikesItemClick: (Int) -> Unit
+    onViewsItemClick: (StatisticType) -> Unit,
+    onSharesItemClick: (StatisticType) -> Unit,
+    onCommentsItemClick: (StatisticType) -> Unit,
+    onLikesItemClick: (StatisticType) -> Unit
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         Row(modifier = Modifier.weight(1f)) {
@@ -142,7 +144,7 @@ private fun PostStatistics(
                 count = viewsItem.count.toString(),
                 iconResId = R.drawable.ic_views
             ) {
-                onViewsItemClick(viewsItem.count)
+                onViewsItemClick(viewsItem.type)
             }
         }
         Row(
@@ -156,19 +158,19 @@ private fun PostStatistics(
                 count = sharesItem.count.toString(),
                 iconResId = R.drawable.ic_share
             ) {
-                onSharesItemClick(sharesItem.count)
+                onSharesItemClick(sharesItem.type)
             }
             StatisticItem(
                 count = commentItem.count.toString(),
                 iconResId = R.drawable.ic_comment
             ) {
-                onCommentsItemClick(commentItem.count)
+                onCommentsItemClick(commentItem.type)
             }
             StatisticItem(
                 count = likesItem.count.toString(),
                 iconResId = R.drawable.ic_like
             ) {
-                onLikesItemClick(likesItem.count)
+                onLikesItemClick(likesItem.type)
             }
         }
     }
@@ -211,9 +213,7 @@ private fun List<StatisticItem>.itemBy(type: StatisticType): StatisticItem = fin
 @Composable
 @CustomPreview
 private fun PostCardLight() {
-    val feedPostState = remember {
-        mutableStateOf(FeedPost())
-    }
+    val feedPostState = MutableLiveData(FeedPost())
     JetpackComposeTheme(darkTheme = false) {
         PostCard(feedPostState, {}, {}, {}, {})
     }
@@ -222,9 +222,7 @@ private fun PostCardLight() {
 @Composable
 @CustomPreview
 private fun PostCardDark() {
-    val feedPostState = remember {
-        mutableStateOf(FeedPost())
-    }
+    val feedPostState = MutableLiveData(FeedPost())
     JetpackComposeTheme(darkTheme = true) {
         PostCard(feedPostState, {}, {}, {}, {})
     }
