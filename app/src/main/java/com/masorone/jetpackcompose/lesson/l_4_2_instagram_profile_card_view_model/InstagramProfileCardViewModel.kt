@@ -24,13 +24,19 @@ class InstagramProfileCardViewModel : ViewModel() {
     fun instagramModels(): LiveData<List<InstagramModel>> = _instagramModels
 
     fun changeFollowing(id: Int) {
-        val modifiedList = _instagramModels.value?.toMutableList() ?: mutableListOf<InstagramModel>()
+        val modifiedList = _instagramModels.value?.toMutableList() ?: mutableListOf()
         modifiedList.replaceAll {
             if (id == it.id)
                 it.copy(isFollowed = it.isFollowed.not())
             else
                 it
         }
+        _instagramModels.value = modifiedList
+    }
+
+    fun deleteItemBy(model: InstagramModel) {
+        val modifiedList = _instagramModels.value?.toMutableList() ?: mutableListOf()
+        modifiedList.remove(model)
         _instagramModels.value = modifiedList
     }
 }

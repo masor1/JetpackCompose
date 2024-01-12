@@ -7,17 +7,24 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.DismissDirection
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontFamily
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.masorone.jetpackcompose.lesson.l_4_2_instagram_profile_card_view_model.InstagramProfileCard
 import com.masorone.jetpackcompose.lesson.l_4_2_instagram_profile_card_view_model.InstagramProfileCardViewModel
@@ -38,6 +45,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 
+    @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     private fun Main() {
         Box(
@@ -47,32 +55,41 @@ class MainActivity : ComponentActivity() {
         ) {
             val models = instagramProfileCardViewModel.instagramModels().observeAsState(listOf())
             LazyColumn {
-                item {
-                    Text(
-                        text = "Title",
-                        modifier = Modifier.fillMaxWidth(),
-                        fontSize = 34.sp,
-                        fontFamily = FontFamily.Monospace,
-                        textAlign = TextAlign.Center
+                items(items = models.value, key = { it.id }) { model ->
+                    val dismissState = rememberDismissState(
+                        positionalThreshold = { 56.dp.toPx() },
                     )
-                }
-                item {
-                    LazyRow {
-                        items(models.value) { model ->
+                    if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+                        instagramProfileCardViewModel.deleteItemBy(model)
+                    }
+                    SwipeToDismiss(
+                        state = dismissState,
+                        directions = setOf(DismissDirection.EndToStart),
+                        background = {
+                            Box(
+                                modifier = Modifier
+                                    .padding(16.dp)
+                                    .clip(RoundedCornerShape(16.dp))
+                                    .background(Color.Red)
+                                    .fillMaxSize(),
+                                contentAlignment = Alignment.CenterEnd
+                            ) {
+                                Text(
+                                    text = "Delete",
+                                    modifier = Modifier.padding(end = 16.dp),
+                                    color = Color.White,
+                                    fontSize = 32.sp,
+                                    fontStyle = FontStyle.Italic
+                                )
+                            }
+                        },
+                        dismissContent = {
                             InstagramProfileCard(
                                 model = model,
                                 onFollowClick = {
                                     instagramProfileCardViewModel.changeFollowing(it)
                                 }
                             )
-                        }
-                    }
-                }
-                items(models.value) { model ->
-                    InstagramProfileCard(
-                        model = model,
-                        onFollowClick = {
-                            instagramProfileCardViewModel.changeFollowing(it)
                         }
                     )
                 }
