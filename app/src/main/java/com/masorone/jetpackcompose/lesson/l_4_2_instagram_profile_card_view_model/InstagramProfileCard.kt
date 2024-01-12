@@ -19,8 +19,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -35,9 +33,10 @@ import com.masorone.jetpackcompose.ui.CustomPreview
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
 
 @Composable
-fun InstagramProfileCard(viewModel: InstagramProfileCardViewModel) {
-    val isFollowed by viewModel.isFollowing.observeAsState(false)
-
+fun InstagramProfileCard(
+    model: InstagramModel,
+    onFollowClick: (Int) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -52,14 +51,14 @@ fun InstagramProfileCard(viewModel: InstagramProfileCardViewModel) {
             defaultElevation = 8.dp
         )
     ) {
-        AccountTopContent(isFollowed = isFollowed) {
-            viewModel.changeFollowing()
+        AccountTopContent(model = model) {
+            onFollowClick(model.id)
         }
     }
 }
 
 @Composable
-private fun AccountTopContent(isFollowed: Boolean, onFollowClick: () -> Unit) {
+private fun AccountTopContent(model: InstagramModel, onFollowClick: () -> Unit) {
     Column {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -83,19 +82,19 @@ private fun AccountTopContent(isFollowed: Boolean, onFollowClick: () -> Unit) {
                 .padding(start = 16.dp, end = 16.dp, bottom = 4.dp)
         ) {
             Text(
-                text = "Instagram",
+                text = "Instagram ${model.title}",
                 fontFamily = FontFamily.Cursive,
                 fontSize = 28.sp
             )
             Text(
-                text = "#YorsToMake",
+                text = "#YorsToMake${model.title}",
                 fontSize = 14.sp
             )
             Text(
                 text = "www.facebook.com/emotionalhealth",
                 fontSize = 14.sp
             )
-            FollowButton(isFollowed = isFollowed) { onFollowClick() }
+            FollowButton(isFollowed = model.isFollowed, onFollowClick = onFollowClick)
         }
     }
 }
@@ -146,7 +145,7 @@ private fun UserStatistics(
 @CustomPreview
 private fun InstagramProfileCardLight() {
     JetpackComposeTheme(darkTheme = false) {
-        InstagramProfileCard(InstagramProfileCardViewModel())
+        InstagramProfileCard(InstagramModel(1, "Title", true), {})
     }
 }
 
@@ -154,6 +153,6 @@ private fun InstagramProfileCardLight() {
 @CustomPreview
 private fun InstagramProfileCardDark() {
     JetpackComposeTheme(darkTheme = true) {
-        InstagramProfileCard(InstagramProfileCardViewModel())
+        InstagramProfileCard(InstagramModel(1, "Title", true), {})
     }
 }
