@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import com.masorone.jetpackcompose.lesson.l_4_2_instagram_profile_card_view_model.InstagramProfileCard
 import com.masorone.jetpackcompose.lesson.l_4_2_instagram_profile_card_view_model.InstagramProfileCardViewModel
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
+import com.masorone.jetpackcompose.vknewsclient.ui.VkNewsMainScreen
 import com.masorone.jetpackcompose.vknewsclient.ui.VkNewsViewModel
 
 class MainActivity : ComponentActivity() {
@@ -40,7 +41,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             JetpackComposeTheme {
-                Main()
+                VkNewsMainScreen(vkNewsViewModel)
             }
         }
     }
@@ -57,7 +58,7 @@ class MainActivity : ComponentActivity() {
             LazyColumn {
                 items(items = models.value, key = { it.id }) { model ->
                     val dismissState = rememberDismissState(
-                        positionalThreshold = { 56.dp.toPx() },
+                        positionalThreshold = { 156.dp.toPx() },
                     )
                     if (dismissState.isDismissed(DismissDirection.EndToStart)) {
                         instagramProfileCardViewModel.deleteItemBy(model)

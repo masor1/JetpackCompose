@@ -5,20 +5,49 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
 import com.masorone.jetpackcompose.vknewsclient.domain.StatisticType
+import kotlin.random.Random
 
 class VkNewsViewModel : ViewModel() {
 
-    private val _feedPostState = MutableLiveData(FeedPost())
+    private val initialList = mutableListOf<FeedPost>().apply {
+        repeat(25) {
+            add(
+                FeedPost(
+                    id = it,
+                    communityName = "Community Name $it",
+                    publicationDate = "${Random.nextInt(1, 12)}:${Random.nextInt(0, 59)}"
+                )
+            )
+        }
+    }
 
-    fun feedPostState(): LiveData<FeedPost> = _feedPostState
+    private val _feedPostState = MutableLiveData(initialList.toList())
 
-    fun incrementStatisticValueBy(type: StatisticType) = with(_feedPostState) {
-        value = value?.copy(statistics = value?.statistics?.map {
-            if (it.type == type) {
+    fun feedPostState(): LiveData<List<FeedPost>> = _feedPostState
+
+    fun incrementStatisticValueBy(feedPost: FeedPost, type: StatisticType) = with(_feedPostState) {
+        val modifiedList = feedPost.statistics.toMutableList()
+        val modifiedList2 = value?.toMutableList() ?: mutableListOf()
+        modifiedList.replaceAll {
+            if(it.type == type) {
                 it.copy(count = it.count + 1)
             } else {
                 it
             }
-        } ?: throw IllegalArgumentException("FeedPost don't be null in ${VkNewsViewModel::javaClass}"))
+        }
+        modifiedList2.replaceAll {
+            if (it == feedPost) {
+                it.copy(statistics = modifiedList)
+            } else {
+                it
+            }
+        }
+        value = modifiedList2
+    }
+
+    fun deleteItemBy(feedPost: FeedPost) {
+        val list = _feedPostState.value?.toMutableList()
+        list?.remove(feedPost)
+        _feedPostState.value = list
     }
 }

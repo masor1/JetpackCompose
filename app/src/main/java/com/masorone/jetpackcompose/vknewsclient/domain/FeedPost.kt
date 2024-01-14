@@ -6,6 +6,7 @@ import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class FeedPost(
+    val id: Int,
     val communityName: String = "Community Name",
     val publicationDate: String = "12:33",
     val avatarResId: Int = R.drawable.ic_launcher_background,
