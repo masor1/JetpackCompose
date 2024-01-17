@@ -23,13 +23,21 @@ class VkNewsViewModel : ViewModel() {
 
     private val _feedPostState = MutableLiveData(initialList.toList())
 
+    private val _selectedNavItem = MutableLiveData<NavigationItem>(NavigationItem.Home)
+
     fun feedPostState(): LiveData<List<FeedPost>> = _feedPostState
+
+    fun selectedNavItem(): LiveData<NavigationItem> = _selectedNavItem
+
+    fun selectNavItem(item: NavigationItem) {
+        _selectedNavItem.value = item
+    }
 
     fun incrementStatisticValueBy(feedPost: FeedPost, type: StatisticType) = with(_feedPostState) {
         val modifiedList = feedPost.statistics.toMutableList()
         val modifiedList2 = value?.toMutableList() ?: mutableListOf()
         modifiedList.replaceAll {
-            if(it.type == type) {
+            if (it.type == type) {
                 it.copy(count = it.count + 1)
             } else {
                 it
