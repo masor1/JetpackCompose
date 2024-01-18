@@ -7,51 +7,55 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.sp
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.masorone.jetpackcompose.ui.CustomPreview
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
+import com.masorone.jetpackcompose.vknewsclient.ui.navigation.VkNavGraph
+import com.masorone.jetpackcompose.vknewsclient.ui.navigation.rememberNavigationState
 
 @Composable
 fun VkNewsMainScreen(viewModel: VkNewsViewModel) {
-    val selectedNavItem by viewModel.selectedNavItem().observeAsState(NavigationItem.Home)
+    val navigationState = rememberNavigationState()
 
     Scaffold(
         bottomBar = {
             NavigationBar {
+                val navBackStackEntry by navigationState.navHostController.currentBackStackEntryAsState()
                 val navigationItems = listOf(
                     NavigationItem.Home,
                     NavigationItem.Favourite,
                     NavigationItem.Profile
                 )
                 navigationItems.forEach { navItem ->
-                    navItem.Show(navItem == selectedNavItem) {
-                        viewModel.selectNavItem(navItem)
+                    navItem.Show(navBackStackEntry = navBackStackEntry) { route ->
+                        navigationState.navigate(route = route)
                     }
                 }
             }
         }
     ) { paddingValues ->
-        when (selectedNavItem) {
-            NavigationItem.Home -> HomeScreen(
-                viewModel = viewModel,
-                paddingValues = paddingValues
-            )
-
-            NavigationItem.Favourite -> TextCounter("Favourite")
-
-            NavigationItem.Profile -> TextCounter("Profile")
-        }
+        VkNavGraph(
+            navController = navigationState.navHostController,
+            newsFeedContent = {
+                HomeScreen(
+                    viewModel = viewModel,
+                    paddingValues = paddingValues
+                )
+            },
+            favouriteContent = { TextCounter("Favourite") },
+            profileContent = { TextCounter("Profile") }
+        )
     }
 }
 
 @Composable
 private fun TextCounter(text: String) {
-    var count by remember {
+    var count by rememberSaveable {
         mutableIntStateOf(0)
     }
     Text(

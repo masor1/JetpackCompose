@@ -13,19 +13,22 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.navigation.NavBackStackEntry
 import com.masorone.jetpackcompose.R
+import com.masorone.jetpackcompose.vknewsclient.ui.navigation.Screen
 
 sealed class NavigationItem(
+    private val screen: Screen,
     private val titleResId: Int,
     private val imageVector: ImageVector
 ) {
 
     context(RowScope)
     @Composable
-    fun Show(selected: Boolean, clickListener: () -> Unit) {
+    fun Show(navBackStackEntry: NavBackStackEntry?, onClick: (String) -> Unit) {
         NavigationBarItem(
-            selected = selected,
-            onClick = { clickListener() },
+            selected = screen.route == navBackStackEntry?.destination?.route,
+            onClick = { onClick(screen.route) },
             label = { Text(stringResource(titleResId)) },
             icon = { Icon(imageVector = imageVector, contentDescription = null) },
             colors = NavigationBarItemDefaults.colors(
@@ -37,9 +40,11 @@ sealed class NavigationItem(
         )
     }
 
-    object Home : NavigationItem(R.string.vk_news_client_main_screen_home_title, Icons.Filled.Home)
+    object Home : NavigationItem(Screen.NewsFeed, R.string.vk_news_client_main_screen_home_title, Icons.Filled.Home)
 
-    object Favourite : NavigationItem(R.string.vk_news_client_main_screen_favourite_title, Icons.Filled.Favorite)
+    object Favourite :
+        NavigationItem(Screen.Favourite, R.string.vk_news_client_main_screen_favourite_title, Icons.Filled.Favorite)
 
-    object Profile : NavigationItem(R.string.vk_news_client_main_screen_profile_title, Icons.Filled.Person)
+    object Profile :
+        NavigationItem(Screen.Profile, R.string.vk_news_client_main_screen_profile_title, Icons.Filled.Person)
 }
