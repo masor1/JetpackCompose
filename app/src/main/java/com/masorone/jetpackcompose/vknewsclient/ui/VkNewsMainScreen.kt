@@ -19,6 +19,8 @@ import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
 import com.masorone.jetpackcompose.vknewsclient.domain.PostComment
 import com.masorone.jetpackcompose.vknewsclient.ui.navigation.VkNavGraph
 import com.masorone.jetpackcompose.vknewsclient.ui.navigation.rememberNavigationState
+import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.HomeScreen
+import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.comments.CommentsScreen
 
 @Composable
 fun VkNewsMainScreen(viewModel: VkNewsViewModel) {

@@ -9,7 +9,6 @@ import androidx.navigation.compose.rememberNavController
 class NavigationState(
     val navHostController: NavHostController
 ) {
-
     fun navigate(route: String) {
         navHostController.navigate(
             route = route,

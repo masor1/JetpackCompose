@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui
+package com.masorone.jetpackcompose.vknewsclient.ui.screen_home.posts
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
