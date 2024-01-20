@@ -7,10 +7,11 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -59,11 +60,13 @@ fun CommentsScreen(
         LazyColumn(
             contentPadding = innerPaddingValues
         ) {
-            items(
-                items = postComments,
-                key = { it.id }
-            ) {
-                CommentItem(comment = it)
+            itemsIndexed(
+                postComments,
+                { _, comment -> comment.id }
+            ) { index, comment ->
+                CommentItem(comment = comment)
+                if (index != postComments.size - 1)
+                    Divider(Modifier.padding(horizontal = 16.dp))
             }
         }
     }
@@ -74,7 +77,7 @@ private fun CommentItem(comment: PostComment) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp)
+            .padding(horizontal = 8.dp)
     ) {
         Icon(
             painter = painterResource(id = comment.authorAvatarId),
@@ -86,24 +89,26 @@ private fun CommentItem(comment: PostComment) {
         Column(
             modifier = Modifier.padding(horizontal = 8.dp)
         ) {
+            SpacerHeight(dp = 4.dp)
             Text(
                 text = "${comment.authorName}: ${comment.id}",
-                fontSize = 16.sp,
+                fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSecondary
             )
             SpacerHeight(dp = 4.dp)
             Text(
                 text = comment.commentText,
-                fontSize = 18.sp
+                fontSize = 14.sp
             )
             SpacerHeight(dp = 4.dp)
             Text(
                 text = comment.date,
                 modifier = Modifier.fillMaxWidth(),
                 textAlign = TextAlign.End,
-                fontSize = 14.sp,
+                fontSize = 12.sp,
                 color = MaterialTheme.colorScheme.onSecondary
             )
+            SpacerHeight(dp = 4.dp)
         }
     }
 }
