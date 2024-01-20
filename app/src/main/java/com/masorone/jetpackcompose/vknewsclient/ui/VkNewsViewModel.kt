@@ -4,30 +4,45 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
+import com.masorone.jetpackcompose.vknewsclient.domain.PostComment
 import com.masorone.jetpackcompose.vknewsclient.domain.StatisticType
+import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.HomeScreenState
 import kotlin.random.Random
 
 class VkNewsViewModel : ViewModel() {
 
-    private val initialList = mutableListOf<FeedPost>().apply {
-        repeat(25) {
-            add(
-                FeedPost(
-                    id = it,
-                    communityName = "Community Name $it",
-                    publicationDate = "${Random.nextInt(1, 12)}:${Random.nextInt(0, 59)}"
+    private val initialState = HomeScreenState.Posts(
+        mutableListOf<FeedPost>().apply {
+            repeat(25) {
+                add(
+                    FeedPost(
+                        id = it,
+                        communityName = "Community Name $it",
+                        publicationDate = "${Random.nextInt(1, 12)}:${Random.nextInt(0, 59)}"
+                    )
                 )
-            )
+            }
         }
-    }
+    )
 
-    private val _feedPostState = MutableLiveData(initialList.toList())
+    private val initialState2 = HomeScreenState.Comments(
+        feedPost = FeedPost(0),
+        comments = mutableListOf<PostComment>().apply {
+            repeat(25) {
+                add(
+                    PostComment(it)
+                )
+            }
+        }
+    )
 
-    fun feedPostState(): LiveData<List<FeedPost>> = _feedPostState
+    private val _homeScreenState: MutableLiveData<HomeScreenState> = MutableLiveData(initialState)
 
-    fun incrementStatisticValueBy(feedPost: FeedPost, type: StatisticType) = with(_feedPostState) {
+    fun homeScreenState(): LiveData<HomeScreenState> = _homeScreenState
+
+    fun incrementStatisticValueBy(feedPost: FeedPost, type: StatisticType) = with(_homeScreenState) {
         val modifiedList = feedPost.statistics.toMutableList()
-        val modifiedList2 = value?.toMutableList() ?: mutableListOf()
+        val modifiedList2 = (value as? HomeScreenState.Posts)?.posts?.toMutableList() ?: mutableListOf()
         modifiedList.replaceAll {
             if (it.type == type) {
                 it.copy(count = it.count + 1)
@@ -42,12 +57,12 @@ class VkNewsViewModel : ViewModel() {
                 it
             }
         }
-        value = modifiedList2
+        value = HomeScreenState.Posts(modifiedList2)
     }
 
     fun deleteItemBy(feedPost: FeedPost) {
-        val list = _feedPostState.value?.toMutableList()
-        list?.remove(feedPost)
-        _feedPostState.value = list
+        val list = (_homeScreenState.value as? HomeScreenState.Posts)?.posts?.toMutableList() ?: mutableListOf()
+        list.remove(feedPost)
+        _homeScreenState.value = HomeScreenState.Posts(list)
     }
 }
