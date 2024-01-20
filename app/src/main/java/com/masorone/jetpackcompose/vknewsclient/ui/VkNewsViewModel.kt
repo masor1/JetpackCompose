@@ -23,15 +23,7 @@ class VkNewsViewModel : ViewModel() {
 
     private val _feedPostState = MutableLiveData(initialList.toList())
 
-    private val _selectedNavItem = MutableLiveData<NavigationItem>(NavigationItem.Home)
-
     fun feedPostState(): LiveData<List<FeedPost>> = _feedPostState
-
-    fun selectedNavItem(): LiveData<NavigationItem> = _selectedNavItem
-
-    fun selectNavItem(item: NavigationItem) {
-        _selectedNavItem.value = item
-    }
 
     fun incrementStatisticValueBy(feedPost: FeedPost, type: StatisticType) = with(_feedPostState) {
         val modifiedList = feedPost.statistics.toMutableList()
