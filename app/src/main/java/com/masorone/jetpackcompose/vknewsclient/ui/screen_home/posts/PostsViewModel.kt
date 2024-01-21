@@ -1,17 +1,15 @@
-package com.masorone.jetpackcompose.vknewsclient.ui
+package com.masorone.jetpackcompose.vknewsclient.ui.screen_home.posts
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
-import com.masorone.jetpackcompose.vknewsclient.domain.PostComment
 import com.masorone.jetpackcompose.vknewsclient.domain.StatisticType
-import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.HomeScreenState
 import kotlin.random.Random
 
-class VkNewsViewModel : ViewModel() {
+class PostsViewModel : ViewModel() {
 
-    private val initialState = HomeScreenState.Posts(
+    private val initialState = PostsScreenState.Posts(
         mutableListOf<FeedPost>().apply {
             repeat(25) {
                 add(
@@ -25,14 +23,12 @@ class VkNewsViewModel : ViewModel() {
         }
     )
 
-    private val _homeScreenState: MutableLiveData<HomeScreenState> = MutableLiveData(initialState)
-    private var savedScreenState: HomeScreenState? = initialState
-
-    fun homeScreenState(): LiveData<HomeScreenState> = _homeScreenState
+    private val _screenState: MutableLiveData<PostsScreenState> = MutableLiveData(initialState)
+    val screenState: LiveData<PostsScreenState> = _screenState
 
     fun incrementStatisticValueBy(feedPost: FeedPost, type: StatisticType) {
-        val currentState = _homeScreenState.value
-        if (currentState !is HomeScreenState.Posts) return
+        val currentState = _screenState.value
+        if (currentState !is PostsScreenState.Posts) return
         val modifiedList = feedPost.statistics.toMutableList()
         val modifiedList2 = currentState.posts.toMutableList()
         modifiedList.replaceAll {
@@ -49,32 +45,14 @@ class VkNewsViewModel : ViewModel() {
                 it
             }
         }
-        _homeScreenState.value = HomeScreenState.Posts(modifiedList2)
+        _screenState.value = PostsScreenState.Posts(modifiedList2)
     }
 
     fun deleteItemBy(feedPost: FeedPost) {
-        val currentState = _homeScreenState.value
-        if (currentState !is HomeScreenState.Posts) return
+        val currentState = _screenState.value
+        if (currentState !is PostsScreenState.Posts) return
         val list = currentState.posts.toMutableList()
         list.remove(feedPost)
-        _homeScreenState.value = HomeScreenState.Posts(list)
-    }
-
-    fun showComments(post: FeedPost) {
-        savedScreenState = _homeScreenState.value
-        _homeScreenState.value = HomeScreenState.Comments(
-            feedPost = post,
-            comments = mutableListOf<PostComment>().apply {
-                repeat(25) {
-                    add(
-                        PostComment(it)
-                    )
-                }
-            }
-        )
-    }
-
-    fun closeComments() {
-        _homeScreenState.value = savedScreenState
+        _screenState.value = PostsScreenState.Posts(list)
     }
 }

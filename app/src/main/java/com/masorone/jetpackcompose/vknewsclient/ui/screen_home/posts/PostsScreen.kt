@@ -16,6 +16,7 @@ import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -23,64 +24,69 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
-import com.masorone.jetpackcompose.vknewsclient.ui.VkNewsViewModel
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
 fun PostsScreen(
-    viewModel: VkNewsViewModel,
-    posts: List<FeedPost>,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onCommentsItemClick: (FeedPost) -> Unit
 ) {
-    LazyColumn(
-        contentPadding = PaddingValues(
-            start = 8.dp,
-            end = 8.dp,
-            top = paddingValues.calculateTopPadding(),
-            bottom = paddingValues.calculateBottomPadding() + 8.dp
-        ),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        items(posts, key = { feedPost -> feedPost.id }) { feedPost ->
-            val dismissState = rememberDismissState(
-                positionalThreshold = { 156.dp.toPx() },
-            )
-            if (dismissState.isDismissed(DismissDirection.EndToStart)) {
-                viewModel.deleteItemBy(feedPost)
-            }
-            SwipeToDismiss(
-                modifier = Modifier.animateItemPlacement(),
-                state = dismissState,
-                directions = setOf(DismissDirection.EndToStart),
-                background = {
-                    Box(
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .clip(RoundedCornerShape(16.dp))
-                            .background(Color.Red)
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.CenterEnd
-                    ) {
-                        Text(
-                            text = "Delete",
-                            modifier = Modifier.padding(end = 16.dp),
-                            color = Color.White,
-                            fontSize = 32.sp,
-                            fontStyle = FontStyle.Italic
+    val viewModel: PostsViewModel = viewModel()
+    val postsScreenState = viewModel.screenState.observeAsState(PostsScreenState.Initial)
+    val state = postsScreenState.value
+
+    if (state is PostsScreenState.Posts) {
+        LazyColumn(
+            contentPadding = PaddingValues(
+                start = 8.dp,
+                end = 8.dp,
+                top = paddingValues.calculateTopPadding(),
+                bottom = paddingValues.calculateBottomPadding() + 8.dp
+            ),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            items(state.posts, key = { feedPost -> feedPost.id }) { feedPost ->
+                val dismissState = rememberDismissState(
+                    positionalThreshold = { 156.dp.toPx() },
+                )
+                if (dismissState.isDismissed(DismissDirection.EndToStart)) {
+                    viewModel.deleteItemBy(feedPost)
+                }
+                SwipeToDismiss(
+                    modifier = Modifier.animateItemPlacement(),
+                    state = dismissState,
+                    directions = setOf(DismissDirection.EndToStart),
+                    background = {
+                        Box(
+                            modifier = Modifier
+                                .padding(16.dp)
+                                .clip(RoundedCornerShape(16.dp))
+                                .background(Color.Red)
+                                .fillMaxSize(),
+                            contentAlignment = Alignment.CenterEnd
+                        ) {
+                            Text(
+                                text = "Delete",
+                                modifier = Modifier.padding(end = 16.dp),
+                                color = Color.White,
+                                fontSize = 32.sp,
+                                fontStyle = FontStyle.Italic
+                            )
+                        }
+                    },
+                    dismissContent = {
+                        PostCard(
+                            feedPost = feedPost,
+                            onViewsItemClick = { viewModel.incrementStatisticValueBy(feedPost, it) },
+                            onSharesItemClick = { viewModel.incrementStatisticValueBy(feedPost, it) },
+                            onCommentsItemClick = { onCommentsItemClick(feedPost) },
+                            onLikesItemClick = { viewModel.incrementStatisticValueBy(feedPost, it) },
                         )
                     }
-                },
-                dismissContent = {
-                    PostCard(
-                        feedPost = feedPost,
-                        onViewsItemClick = { viewModel.incrementStatisticValueBy(feedPost, it) },
-                        onSharesItemClick = { viewModel.incrementStatisticValueBy(feedPost, it) },
-                        onCommentsItemClick = { viewModel.showComments(feedPost) },
-                        onLikesItemClick = { viewModel.incrementStatisticValueBy(feedPost, it) },
-                    )
-                }
-            )
+                )
+            }
         }
     }
 }

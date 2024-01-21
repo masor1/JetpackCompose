@@ -3,37 +3,28 @@ package com.masorone.jetpackcompose.vknewsclient.ui.screen_home
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
-import com.masorone.jetpackcompose.vknewsclient.ui.VkNewsViewModel
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.comments.CommentsScreen
 import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.posts.PostsScreen
 
 @Composable
 fun HomeScreen(
-    viewModel: VkNewsViewModel,
     paddingValues: PaddingValues
 ) {
-    val homeScreenState = viewModel.homeScreenState().observeAsState(HomeScreenState.Initial)
-    when (val currentState = homeScreenState.value) {
-        is HomeScreenState.Posts -> PostsScreen(
-            viewModel = viewModel,
-            posts = currentState.posts,
-            paddingValues = paddingValues
-        )
-
-        is HomeScreenState.Comments -> {
-            CommentsScreen(
-                feedPost = currentState.feedPost,
-                postComments = currentState.comments,
-                paddingValues = paddingValues
-            ) {
-                viewModel.closeComments()
-            }
-            BackHandler {
-                viewModel.closeComments()
-            }
+    val currentState = remember {
+        mutableStateOf(true)
+    }
+    if (currentState.value) {
+        PostsScreen(paddingValues = paddingValues) {
+            currentState.value = false
         }
-
-        is HomeScreenState.Initial -> Unit
+    } else {
+        CommentsScreen(paddingValues = paddingValues) {
+            currentState.value = true
+        }
+        BackHandler {
+            currentState.value = true
+        }
     }
 }

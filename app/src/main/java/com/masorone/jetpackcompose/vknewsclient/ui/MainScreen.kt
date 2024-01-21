@@ -20,7 +20,7 @@ import com.masorone.jetpackcompose.vknewsclient.ui.navigation.rememberNavigation
 import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.HomeScreen
 
 @Composable
-fun VkNewsMainScreen(viewModel: VkNewsViewModel) {
+fun MainScreen() {
     val navigationState = rememberNavigationState()
 
     Scaffold(
@@ -44,7 +44,6 @@ fun VkNewsMainScreen(viewModel: VkNewsViewModel) {
             navController = navigationState.navHostController,
             newsFeedContent = {
                 HomeScreen(
-                    viewModel = viewModel,
                     paddingValues = paddingValues
                 )
             },
@@ -74,7 +73,7 @@ private fun TextCounter(text: String) {
 @CustomPreview
 fun VkNewsMainScreenLight() {
     JetpackComposeTheme(darkTheme = false) {
-        VkNewsMainScreen(VkNewsViewModel())
+        MainScreen()
     }
 }
 
@@ -82,6 +81,6 @@ fun VkNewsMainScreenLight() {
 @CustomPreview
 fun VkNewsMainScreenDark() {
     JetpackComposeTheme(darkTheme = true) {
-        VkNewsMainScreen(VkNewsViewModel())
+        MainScreen()
     }
 }
