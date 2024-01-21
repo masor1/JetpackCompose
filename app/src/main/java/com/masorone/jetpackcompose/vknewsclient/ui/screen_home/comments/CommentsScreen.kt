@@ -37,7 +37,8 @@ import com.masorone.jetpackcompose.vknewsclient.domain.PostComment
 fun CommentsScreen(
     feedPost: FeedPost,
     postComments: List<PostComment>,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    onBackPressed: () -> Unit
 ) {
     Scaffold(
         modifier = Modifier.padding(paddingValues),
@@ -47,7 +48,7 @@ fun CommentsScreen(
                     Text(text = "Comments for post: ${feedPost.id}")
                 },
                 navigationIcon = {
-                    IconButton(onClick = { }) {
+                    IconButton(onClick = onBackPressed) {
                         Icon(
                             imageVector = Icons.Filled.ArrowBack,
                             contentDescription = null

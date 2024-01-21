@@ -76,7 +76,7 @@ fun PostsScreen(
                         feedPost = feedPost,
                         onViewsItemClick = { viewModel.incrementStatisticValueBy(feedPost, it) },
                         onSharesItemClick = { viewModel.incrementStatisticValueBy(feedPost, it) },
-                        onCommentsItemClick = { viewModel.incrementStatisticValueBy(feedPost, it) },
+                        onCommentsItemClick = { viewModel.showComments(feedPost) },
                         onLikesItemClick = { viewModel.incrementStatisticValueBy(feedPost, it) },
                     )
                 }

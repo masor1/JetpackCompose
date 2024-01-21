@@ -15,12 +15,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.masorone.jetpackcompose.ui.CustomPreview
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
-import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
-import com.masorone.jetpackcompose.vknewsclient.domain.PostComment
 import com.masorone.jetpackcompose.vknewsclient.ui.navigation.VkNavGraph
 import com.masorone.jetpackcompose.vknewsclient.ui.navigation.rememberNavigationState
 import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.HomeScreen
-import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.comments.CommentsScreen
 
 @Composable
 fun VkNewsMainScreen(viewModel: VkNewsViewModel) {
@@ -51,17 +48,7 @@ fun VkNewsMainScreen(viewModel: VkNewsViewModel) {
                     paddingValues = paddingValues
                 )
             },
-            favouriteContent = {
-                CommentsScreen(
-                    feedPost = FeedPost(1),
-                    postComments = mutableListOf<PostComment>().apply {
-                        repeat(15) {
-                            add(PostComment(it))
-                        }
-                    },
-                    paddingValues = paddingValues
-                )
-            },
+            favouriteContent = { TextCounter("Favourite") },
             profileContent = { TextCounter("Profile") }
         )
     }

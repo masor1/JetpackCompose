@@ -25,24 +25,16 @@ class VkNewsViewModel : ViewModel() {
         }
     )
 
-    private val initialState2 = HomeScreenState.Comments(
-        feedPost = FeedPost(0),
-        comments = mutableListOf<PostComment>().apply {
-            repeat(25) {
-                add(
-                    PostComment(it)
-                )
-            }
-        }
-    )
-
     private val _homeScreenState: MutableLiveData<HomeScreenState> = MutableLiveData(initialState)
+    private var savedScreenState: HomeScreenState? = initialState
 
     fun homeScreenState(): LiveData<HomeScreenState> = _homeScreenState
 
-    fun incrementStatisticValueBy(feedPost: FeedPost, type: StatisticType) = with(_homeScreenState) {
+    fun incrementStatisticValueBy(feedPost: FeedPost, type: StatisticType) {
+        val currentState = _homeScreenState.value
+        if (currentState !is HomeScreenState.Posts) return
         val modifiedList = feedPost.statistics.toMutableList()
-        val modifiedList2 = (value as? HomeScreenState.Posts)?.posts?.toMutableList() ?: mutableListOf()
+        val modifiedList2 = currentState.posts.toMutableList()
         modifiedList.replaceAll {
             if (it.type == type) {
                 it.copy(count = it.count + 1)
@@ -57,12 +49,32 @@ class VkNewsViewModel : ViewModel() {
                 it
             }
         }
-        value = HomeScreenState.Posts(modifiedList2)
+        _homeScreenState.value = HomeScreenState.Posts(modifiedList2)
     }
 
     fun deleteItemBy(feedPost: FeedPost) {
-        val list = (_homeScreenState.value as? HomeScreenState.Posts)?.posts?.toMutableList() ?: mutableListOf()
+        val currentState = _homeScreenState.value
+        if (currentState !is HomeScreenState.Posts) return
+        val list = currentState.posts.toMutableList()
         list.remove(feedPost)
         _homeScreenState.value = HomeScreenState.Posts(list)
+    }
+
+    fun showComments(post: FeedPost) {
+        savedScreenState = _homeScreenState.value
+        _homeScreenState.value = HomeScreenState.Comments(
+            feedPost = post,
+            comments = mutableListOf<PostComment>().apply {
+                repeat(25) {
+                    add(
+                        PostComment(it)
+                    )
+                }
+            }
+        )
+    }
+
+    fun closeComments() {
+        _homeScreenState.value = savedScreenState
     }
 }

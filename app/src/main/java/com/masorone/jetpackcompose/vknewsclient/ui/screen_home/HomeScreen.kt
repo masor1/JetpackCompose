@@ -1,5 +1,6 @@
 package com.masorone.jetpackcompose.vknewsclient.ui.screen_home
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
@@ -20,11 +21,18 @@ fun HomeScreen(
             paddingValues = paddingValues
         )
 
-        is HomeScreenState.Comments -> CommentsScreen(
-            feedPost = currentState.feedPost,
-            postComments = currentState.comments,
-            paddingValues = paddingValues
-        )
+        is HomeScreenState.Comments -> {
+            CommentsScreen(
+                feedPost = currentState.feedPost,
+                postComments = currentState.comments,
+                paddingValues = paddingValues
+            ) {
+                viewModel.closeComments()
+            }
+            BackHandler {
+                viewModel.closeComments()
+            }
+        }
 
         is HomeScreenState.Initial -> Unit
     }
