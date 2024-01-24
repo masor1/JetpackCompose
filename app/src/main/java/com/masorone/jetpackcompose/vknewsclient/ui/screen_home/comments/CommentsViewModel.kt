@@ -6,16 +6,18 @@ import androidx.lifecycle.ViewModel
 import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
 import com.masorone.jetpackcompose.vknewsclient.domain.PostComment
 
-class CommentsViewModel : ViewModel() {
+class CommentsViewModel(
+    feedPost: FeedPost
+) : ViewModel() {
 
     private val _screenState: MutableLiveData<CommentsScreenState> = MutableLiveData(CommentsScreenState.Initial)
     val screenState: LiveData<CommentsScreenState> = _screenState
 
     init {
-        showComments(FeedPost(0))
+        showComments(feedPost)
     }
 
-    fun showComments(feedPost: FeedPost) {
+    private fun showComments(feedPost: FeedPost) {
         _screenState.value = CommentsScreenState.Comments(
             feedPost = feedPost,
             comments = mutableListOf<PostComment>().apply {

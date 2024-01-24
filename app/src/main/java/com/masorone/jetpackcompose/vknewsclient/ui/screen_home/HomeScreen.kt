@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
 import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.comments.CommentsScreen
 import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.posts.PostsScreen
 
@@ -13,18 +14,22 @@ fun HomeScreen(
     paddingValues: PaddingValues
 ) {
     val currentState = remember {
-        mutableStateOf(true)
+        mutableStateOf<FeedPost?>(null)
     }
-    if (currentState.value) {
+    val stateValue = currentState.value
+    if (stateValue == null) {
         PostsScreen(paddingValues = paddingValues) {
-            currentState.value = false
+            currentState.value = it
         }
     } else {
-        CommentsScreen(paddingValues = paddingValues) {
-            currentState.value = true
+        CommentsScreen(
+            feedPost = stateValue,
+            paddingValues = paddingValues
+        ) {
+            currentState.value = null
         }
         BackHandler {
-            currentState.value = true
+            currentState.value = null
         }
     }
 }

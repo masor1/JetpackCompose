@@ -31,15 +31,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.masorone.jetpackcompose.ui.CustomPreview
 import com.masorone.jetpackcompose.ui.SpacerHeight
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
+import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
 import com.masorone.jetpackcompose.vknewsclient.domain.PostComment
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsScreen(
+    feedPost: FeedPost,
     paddingValues: PaddingValues,
     onBackPressed: () -> Unit
 ) {
-    val viewModel: CommentsViewModel = viewModel()
+    val viewModel: CommentsViewModel = viewModel(
+        factory = CommentsViewModelFactory(feedPost = feedPost)
+    )
     val state = viewModel.screenState.observeAsState(CommentsScreenState.Initial).value
     if (state is CommentsScreenState.Comments) {
         Scaffold(
@@ -64,8 +68,8 @@ fun CommentsScreen(
                 contentPadding = innerPaddingValues
             ) {
                 itemsIndexed(
-                    state.comments,
-                    { _, comment -> comment.id }
+                    items = state.comments,
+                    key = { _, comment -> comment.id }
                 ) { index, comment ->
                     CommentItem(comment = comment)
                     if (index != state.comments.size - 1)
