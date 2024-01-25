@@ -2,6 +2,7 @@ package com.masorone.jetpackcompose.vknewsclient.ui.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
@@ -14,10 +15,14 @@ class NavigationState(
             route = route,
             navOptions = NavOptions.Builder()
                 .setLaunchSingleTop(true)
-                .setPopUpTo(Screen.Home.route, inclusive = false, saveState = true)
+                .setPopUpTo(navHostController.graph.findStartDestination().id, inclusive = false, saveState = true)
                 .setRestoreState(true)
                 .build()
         )
+    }
+
+    fun navigateToComments() {
+        navHostController.navigate(Screen.Home.Comments.route)
     }
 }
 

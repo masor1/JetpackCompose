@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavDestination.Companion.hierarchy
 import com.masorone.jetpackcompose.R
 import com.masorone.jetpackcompose.vknewsclient.ui.navigation.Screen
 
@@ -26,9 +27,12 @@ sealed class NavigationItem(
     context(RowScope)
     @Composable
     fun Show(navBackStackEntry: NavBackStackEntry?, onClick: (String) -> Unit) {
+        val selected = navBackStackEntry?.destination?.hierarchy?.any {
+            it.route == screen.route
+        } ?: false
         NavigationBarItem(
-            selected = screen.route == navBackStackEntry?.destination?.route,
-            onClick = { onClick(screen.route) },
+            selected = selected,
+            onClick = { if (!selected) onClick(screen.route) },
             label = { Text(stringResource(titleResId)) },
             icon = { Icon(imageVector = imageVector, contentDescription = null) },
             colors = NavigationBarItemDefaults.colors(
@@ -40,7 +44,8 @@ sealed class NavigationItem(
         )
     }
 
-    object Home : NavigationItem(Screen.Home.NewsFeed, R.string.vk_news_client_main_screen_home_title, Icons.Filled.Home)
+    object Home :
+        NavigationItem(Screen.Home, R.string.vk_news_client_main_screen_home_title, Icons.Filled.Home)
 
     object Favourite :
         NavigationItem(Screen.Favourite, R.string.vk_news_client_main_screen_favourite_title, Icons.Filled.Favorite)

@@ -1,6 +1,5 @@
 package com.masorone.jetpackcompose.vknewsclient.ui
 
-import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.NavigationBar
@@ -17,7 +16,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import com.masorone.jetpackcompose.ui.CustomPreview
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
 import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
-import com.masorone.jetpackcompose.vknewsclient.ui.navigation.Screen
 import com.masorone.jetpackcompose.vknewsclient.ui.navigation.VkNavGraph
 import com.masorone.jetpackcompose.vknewsclient.ui.navigation.rememberNavigationState
 import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.comments.CommentsScreen
@@ -48,7 +46,7 @@ fun MainScreen() {
             navController = navigationState.navHostController,
             newsFeedContent = {
                 PostsScreen(paddingValues = paddingValues) {
-                    navigationState.navigate(Screen.Home.Comments.route)
+                    navigationState.navigateToComments()
                 }
             },
             commentsContent = {
@@ -56,14 +54,15 @@ fun MainScreen() {
                     feedPost = FeedPost(1),
                     paddingValues = paddingValues
                 ) {
-                    navigationState.navigate(Screen.Home.NewsFeed.route)
-                }
-                BackHandler {
-                    navigationState.navigate(Screen.Home.NewsFeed.route)
+                    navigationState.navHostController.popBackStack()
                 }
             },
-            favouriteContent = { TextCounter("Favourite") },
-            profileContent = { TextCounter("Profile") }
+            favouriteContent = {
+                TextCounter("Favourite")
+            },
+            profileContent = {
+                TextCounter("Profile")
+            }
         )
     }
 }
