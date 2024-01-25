@@ -12,12 +12,10 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.TileMode
 import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-@Preview
 @Composable
-fun CanvasTest() {
+fun Samples10_1_10_2() {
     Canvas(
         modifier = Modifier
             .fillMaxSize()
