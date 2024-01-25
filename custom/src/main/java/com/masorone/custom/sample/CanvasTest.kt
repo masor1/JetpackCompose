@@ -46,7 +46,11 @@ fun CanvasTest() {
                 lineTo(center.x - 25.dp.toPx(), 150.dp.toPx())
                 lineTo(center.x, 100.dp.toPx())
             },
-            color = Color.Cyan,
+            brush = Brush.linearGradient(
+                colors = listOf(Color.Cyan, Color.Magenta),
+                end = Offset(-20.dp.toPx(), 20.dp.toPx()),
+                tileMode = TileMode.Mirror
+            ),
             style = Fill
         )
     }
