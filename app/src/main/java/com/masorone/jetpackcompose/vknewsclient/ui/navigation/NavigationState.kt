@@ -14,7 +14,7 @@ class NavigationState(
             route = route,
             navOptions = NavOptions.Builder()
                 .setLaunchSingleTop(true)
-                .setPopUpTo(Screen.NewsFeed.route, inclusive = false, saveState = true)
+                .setPopUpTo(Screen.Home.route, inclusive = false, saveState = true)
                 .setRestoreState(true)
                 .build()
         )

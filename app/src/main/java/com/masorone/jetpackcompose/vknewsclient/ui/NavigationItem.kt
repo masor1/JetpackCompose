@@ -40,7 +40,7 @@ sealed class NavigationItem(
         )
     }
 
-    object Home : NavigationItem(Screen.NewsFeed, R.string.vk_news_client_main_screen_home_title, Icons.Filled.Home)
+    object Home : NavigationItem(Screen.Home.NewsFeed, R.string.vk_news_client_main_screen_home_title, Icons.Filled.Home)
 
     object Favourite :
         NavigationItem(Screen.Favourite, R.string.vk_news_client_main_screen_favourite_title, Icons.Filled.Favorite)

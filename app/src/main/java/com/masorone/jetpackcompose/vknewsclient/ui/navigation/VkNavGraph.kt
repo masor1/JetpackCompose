@@ -9,16 +9,18 @@ import androidx.navigation.compose.composable
 fun VkNavGraph(
     navController: NavHostController,
     newsFeedContent: @Composable () -> Unit,
+    commentsContent: @Composable () -> Unit,
     favouriteContent: @Composable () -> Unit,
     profileContent: @Composable () -> Unit,
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screen.NewsFeed.route,
+        startDestination = Screen.Home.route,
     ) {
-        composable(Screen.NewsFeed.route) {
-            newsFeedContent()
-        }
+        homeScreenNavGraph(
+            newsFeedContent = newsFeedContent,
+            commentsContent = commentsContent
+        )
         composable(Screen.Favourite.route) {
             favouriteContent()
         }
