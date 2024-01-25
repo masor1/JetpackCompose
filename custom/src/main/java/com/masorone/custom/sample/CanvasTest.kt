@@ -10,8 +10,10 @@ import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
+@Preview
 @Composable
 fun CanvasTest() {
     Canvas(
@@ -19,21 +21,6 @@ fun CanvasTest() {
             .fillMaxSize()
             .background(Color.Black)
     ) {
-        drawLine(
-            color = Color.White,
-            start = Offset(0f, 0f),
-            end = Offset(size.width, size.height),
-        )
-        drawLine(
-            color = Color.White,
-            start = Offset(size.width, 0f),
-            end = Offset(0f, size.height),
-        )
-        drawCircle(
-            color = Color.Red,
-            radius = 100.dp.toPx(),
-            style = Stroke(2.dp.toPx())
-        )
         fedor()
     }
 }
