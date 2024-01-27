@@ -51,7 +51,7 @@ fun CommentsScreen(
             topBar = {
                 TopAppBar(
                     title = {
-                        Text(text = "Comments for post: ${state.feedPost.id}")
+                        Text(text = "${state.feedPost.contentText}: ${state.feedPost.id}")
                     },
                     navigationIcon = {
                         IconButton(onClick = onBackPressed) {
