@@ -6,9 +6,9 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
+import com.google.gson.Gson
 import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
-import com.masorone.jetpackcompose.vknewsclient.ui.navigation.Screen.Companion.ROUTE_ARG_KEY_CONTENT_TEXT_ID
-import com.masorone.jetpackcompose.vknewsclient.ui.navigation.Screen.Companion.ROUTE_ARG_KEY_FEED_POST_ID
+import com.masorone.jetpackcompose.vknewsclient.ui.navigation.Screen.Companion.ROUTE_ARG_KEY_FEED_POST
 
 fun NavGraphBuilder.homeScreenNavGraph(
     newsFeedContent: @Composable () -> Unit,
@@ -24,13 +24,11 @@ fun NavGraphBuilder.homeScreenNavGraph(
         composable(
             route = Screen.Home.Comments.route,
             arguments = listOf(
-                navArgument(ROUTE_ARG_KEY_FEED_POST_ID) { type = NavType.IntType },
-                navArgument(ROUTE_ARG_KEY_CONTENT_TEXT_ID) { type = NavType.StringType }
+                navArgument(ROUTE_ARG_KEY_FEED_POST) { type = NavType.StringType }
             )
         ) {
-            val feedPostId = it.arguments?.getInt(ROUTE_ARG_KEY_FEED_POST_ID) ?: 0
-            val contentText = it.arguments?.getString(ROUTE_ARG_KEY_CONTENT_TEXT_ID) ?: ""
-            commentsContent(FeedPost(feedPostId, contentText = contentText))
+            val feedPost = Gson().fromJson(it.arguments?.getString(ROUTE_ARG_KEY_FEED_POST), FeedPost::class.java)
+            commentsContent(feedPost)
         }
     }
 }
