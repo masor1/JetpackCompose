@@ -28,7 +28,7 @@ sealed class Screen(
         ) {
             fun routeWithArgs(feedPost: FeedPost) = ROUTE_COMMENTS +
                     String.format(ROUTE_ARG_VALUE, feedPost.id) +
-                    String.format(ROUTE_ARG_VALUE, feedPost.contentText)
+                    String.format(ROUTE_ARG_VALUE, feedPost.contentText.encode())
         }
     }
 

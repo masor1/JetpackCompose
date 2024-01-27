@@ -11,7 +11,7 @@ data class FeedPost(
     val communityName: String = "Community Name",
     val publicationDate: String = "12:33",
     val avatarResId: Int = R.drawable.ic_launcher_background,
-    val contentText: String = "Default ${Random.nextInt(1, 100)}",
+    val contentText: String = "Default/ /*{ /\\} ${Random.nextInt(1, 100)}",
     val contentImageResId: Int = R.drawable.ic_launcher_background,
     val statistics: List<StatisticItem> = listOf(
         StatisticItem(StatisticType.VIEWS, 206),
