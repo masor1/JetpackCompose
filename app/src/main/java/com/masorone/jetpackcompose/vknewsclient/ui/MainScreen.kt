@@ -15,7 +15,6 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.masorone.jetpackcompose.ui.CustomPreview
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
-import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
 import com.masorone.jetpackcompose.vknewsclient.ui.navigation.VkNavGraph
 import com.masorone.jetpackcompose.vknewsclient.ui.navigation.rememberNavigationState
 import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.comments.CommentsScreen
@@ -45,13 +44,13 @@ fun MainScreen() {
         VkNavGraph(
             navController = navigationState.navHostController,
             newsFeedContent = {
-                PostsScreen(paddingValues = paddingValues) {
-                    navigationState.navigateToComments()
+                PostsScreen(paddingValues = paddingValues) { feedPost ->
+                    navigationState.navigateToComments(feedPost)
                 }
             },
-            commentsContent = {
+            commentsContent = { feedPost ->
                 CommentsScreen(
-                    feedPost = FeedPost(1),
+                    feedPost = feedPost,
                     paddingValues = paddingValues
                 ) {
                     navigationState.navHostController.popBackStack()
