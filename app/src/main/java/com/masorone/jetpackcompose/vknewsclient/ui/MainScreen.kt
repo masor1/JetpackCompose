@@ -84,7 +84,7 @@ private fun TextCounter(text: String) {
 
 @Composable
 @CustomPreview
-fun VkNewsMainScreenLight() {
+private fun VkNewsMainScreenLight() {
     JetpackComposeTheme(darkTheme = false) {
         MainScreen()
     }
@@ -92,7 +92,7 @@ fun VkNewsMainScreenLight() {
 
 @Composable
 @CustomPreview
-fun VkNewsMainScreenDark() {
+private fun VkNewsMainScreenDark() {
     JetpackComposeTheme(darkTheme = true) {
         MainScreen()
     }
