@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui.navigation
+package com.masorone.jetpackcompose.vknewsclient.presentation.navigation
 
 import android.net.Uri
 import android.os.Build

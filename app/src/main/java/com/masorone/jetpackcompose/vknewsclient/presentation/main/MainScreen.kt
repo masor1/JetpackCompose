@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui
+package com.masorone.jetpackcompose.vknewsclient.presentation.main
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxSize
@@ -15,10 +15,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.masorone.jetpackcompose.ui.CustomPreview
 import com.masorone.jetpackcompose.ui.theme.JetpackComposeTheme
-import com.masorone.jetpackcompose.vknewsclient.ui.navigation.VkNavGraph
-import com.masorone.jetpackcompose.vknewsclient.ui.navigation.rememberNavigationState
-import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.comments.CommentsScreen
-import com.masorone.jetpackcompose.vknewsclient.ui.screen_home.posts.PostsScreen
+import com.masorone.jetpackcompose.vknewsclient.presentation.navigation.VkNavGraph
+import com.masorone.jetpackcompose.vknewsclient.presentation.navigation.rememberNavigationState
+import com.masorone.jetpackcompose.vknewsclient.presentation.screen_home.comments.CommentsScreen
+import com.masorone.jetpackcompose.vknewsclient.presentation.screen_home.posts.PostsScreen
 
 @Composable
 fun MainScreen() {

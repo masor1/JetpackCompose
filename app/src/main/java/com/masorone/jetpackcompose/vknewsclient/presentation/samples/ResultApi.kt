@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui.result_api
+package com.masorone.jetpackcompose.vknewsclient.presentation.samples
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

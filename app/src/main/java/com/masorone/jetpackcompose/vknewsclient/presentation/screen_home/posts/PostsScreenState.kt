@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui.screen_home.posts
+package com.masorone.jetpackcompose.vknewsclient.presentation.screen_home.posts
 
 import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
 

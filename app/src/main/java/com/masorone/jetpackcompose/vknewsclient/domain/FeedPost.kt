@@ -5,7 +5,7 @@ import android.os.Parcelable
 import androidx.navigation.NavType
 import com.google.gson.Gson
 import com.masorone.jetpackcompose.R
-import com.masorone.jetpackcompose.vknewsclient.ui.navigation.getParcelableCompat
+import com.masorone.jetpackcompose.vknewsclient.presentation.navigation.getParcelableCompat
 import kotlinx.parcelize.Parcelize
 import kotlin.random.Random
 

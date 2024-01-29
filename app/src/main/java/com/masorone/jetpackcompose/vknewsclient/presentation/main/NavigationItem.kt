@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui
+package com.masorone.jetpackcompose.vknewsclient.presentation.main
 
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons
@@ -16,7 +16,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavDestination.Companion.hierarchy
 import com.masorone.jetpackcompose.R
-import com.masorone.jetpackcompose.vknewsclient.ui.navigation.Screen
+import com.masorone.jetpackcompose.vknewsclient.presentation.navigation.Screen
 
 sealed class NavigationItem(
     private val screen: Screen,

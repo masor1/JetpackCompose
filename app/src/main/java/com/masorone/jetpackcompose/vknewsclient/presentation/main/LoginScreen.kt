@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui
+package com.masorone.jetpackcompose.vknewsclient.presentation.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

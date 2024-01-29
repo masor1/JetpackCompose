@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui.navigation
+package com.masorone.jetpackcompose.vknewsclient.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavGraphBuilder
@@ -6,7 +6,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navigation
 import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
-import com.masorone.jetpackcompose.vknewsclient.ui.navigation.Screen.Companion.ROUTE_ARG_KEY_FEED_POST
+import com.masorone.jetpackcompose.vknewsclient.presentation.navigation.Screen.Companion.ROUTE_ARG_KEY_FEED_POST
 
 fun NavGraphBuilder.homeScreenNavGraph(
     newsFeedContent: @Composable () -> Unit,

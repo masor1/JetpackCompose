@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui.screen_home.comments
+package com.masorone.jetpackcompose.vknewsclient.presentation.screen_home.comments
 
 import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
 import com.masorone.jetpackcompose.vknewsclient.domain.PostComment

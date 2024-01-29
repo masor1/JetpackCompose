@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui.screen_home.comments
+package com.masorone.jetpackcompose.vknewsclient.presentation.screen_home.comments
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

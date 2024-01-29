@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui.navigation
+package com.masorone.jetpackcompose.vknewsclient.presentation.navigation
 
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController

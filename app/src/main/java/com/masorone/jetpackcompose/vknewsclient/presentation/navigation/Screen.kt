@@ -1,4 +1,4 @@
-package com.masorone.jetpackcompose.vknewsclient.ui.navigation
+package com.masorone.jetpackcompose.vknewsclient.presentation.navigation
 
 import com.google.gson.Gson
 import com.masorone.jetpackcompose.vknewsclient.domain.FeedPost
